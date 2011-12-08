@@ -1,0 +1,85 @@
+#!/bin/bash
+
+SC_ROOT="$HOME/.sc/"
+SC_SERVERS="$HOME/.sc/servers"
+SC_BIN="$HOME/.sc/bin"
+
+mkdir -p $SC_SERVERS
+
+if [ "$1" == "--help" ] || [ "$1" == "-h" ]; then
+  echo "Handy server scripts"
+  echo
+  echo "Basic Usage"
+  echo "    sc [name]        Logs into the named server"
+  echo "    sc               Lists all the servers you can log into"
+  echo "    sc -i [name]     Shows the login and IP details for the given server"
+  echo
+  echo "Advanced usage"
+  echo "    sc -k [name]                 Copies your public key over to the server for passwordless entry (requires ssh-copy-id)"
+  echo "    sc -a [name] [ip] [user]     Adds a server to the orion setup"
+  echo "    sc -ak [name] [ip] [user]    Adds a server to the orion setup, and installs your public key"
+  echo
+
+  exit 0
+fi
+
+if [ "$1" == "" ]; then
+
+  printf "%15s    %-16s %s\n" "NAME" "IP" "LOGIN"
+  echo "-----------------------------------------------------"
+  for x in `ls -x1 $SC_SERVERS`; do
+    source $SC_SERVERS/$x
+    printf "%15s    %-16s %s\n" $x $SERVER $LOGIN
+  done
+
+  echo
+  echo `ls -x1 $SC_SERVERS | wc -l` servers
+  echo
+
+  exit 0
+fi
+
+if [ "$1" == "-k" ]; then
+  if [ "$2" == "" ]; then
+    echo "Usage: sc -k [name]"
+    exit 1
+  fi
+
+  source $SC_SERVERS/$2
+  ssh-copy-id $LOGIN@$SERVER
+  exit 0
+fi
+
+if [ "$1" == "-a" ] || [ "$1" == "-ak" ]; then
+  if [ "$2" == "" ] || [ "$3" == "" ]  || [ "$4" == "" ]; then
+    echo "Usage: sc -a [name] [ip] [user]"
+    exit 1
+  fi
+
+  echo "SERVER=$3" > $SC_SERVERS/$2
+  echo "LOGIN=$4" >> $SC_SERVERS/$2
+
+  echo "Added $2 to server setups"
+
+  if [ "$1" == "-ak" ]; then
+    echo "Installing key"
+    source $SC_SERVERS/$2
+    ssh-copy-id $LOGIN@$SERVER
+  fi
+
+  exit 0
+fi
+
+if [ "$1" == "-i" ]; then
+  if [ "$2" == "" ]; then
+    echo "Usage: sc -i [name]"
+    exit 1
+  fi
+
+  cat $SC_SERVERS/$2
+  echo 
+  exit 0
+fi
+
+source $SC_SERVERS/$1
+ssh $LOGIN@$SERVER ${@:2}
