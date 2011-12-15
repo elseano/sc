@@ -16,8 +16,8 @@ if [ "$1" == "--help" ] || [ "$1" == "-h" ]; then
   echo
   echo "Advanced usage"
   echo "    sc -k [name]                 Copies your public key over to the server for passwordless entry (requires ssh-copy-id)"
-  echo "    sc -a [name] [ip] [user]     Adds a server to the orion setup"
-  echo "    sc -ak [name] [ip] [user]    Adds a server to the orion setup, and installs your public key"
+  echo "    sc -a [name] [ip] [user]     Adds a server to the SC library"
+  echo "    sc -ak [name] [ip] [user]    Adds a server to the SC library, and installs your public key"
   echo
 
   exit 0
