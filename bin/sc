@@ -76,8 +76,8 @@ if [ "$1" == "-i" ]; then
     exit 1
   fi
 
-  cat $SC_SERVERS/$2
-  echo 
+  source $SC_SERVERS/$2
+  printf "%s@%s" $LOGIN $SERVER
   exit 0
 fi
 
