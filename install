@@ -1,0 +1,10 @@
+#!/bin/bash
+
+echo "Fetching sc into ~/.sc"
+git clone git://github.com/elseano/sc.git ~/.sc
+echo
+echo "Success: sc has been installed."
+echo
+echo "Update your settings to add ~/.sc/bin to your path,"
+echo "and then use the 'sc' command to manage your servers."
+echo
