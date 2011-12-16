@@ -4,6 +4,12 @@ SC_ROOT="$HOME/.sc/"
 SC_SERVERS="$HOME/.sc/servers"
 SC_BIN="$HOME/.sc/bin"
 
+if [ ! "`which ssh-copy-id`" == "" ]; then
+  SSH_COPY_ID="$SC_BIN/ssh-copy-id-osx.sh"
+else
+  SSH_COPY_ID="ssh-copy-id"
+fi
+
 mkdir -p $SC_SERVERS
 
 if [ "$1" == "--help" ] || [ "$1" == "-h" ]; then
@@ -16,7 +22,7 @@ if [ "$1" == "--help" ] || [ "$1" == "-h" ]; then
   echo "    sc -h [name]     Shows the hostname of the given server"
   echo
   echo "Advanced usage"
-  echo "    sc -k [name]                 Copies your public key over to the server for passwordless entry (requires ssh-copy-id)"
+  echo "    sc -k [name]                 Copies your public key over to the server for passwordless entry"
   echo "    sc -a [name] [ip] [user]     Adds a server to the SC library"
   echo "    sc -ak [name] [ip] [user]    Adds a server to the SC library, and installs your public key"
   echo
@@ -47,7 +53,7 @@ if [ "$1" == "-k" ]; then
   fi
 
   source $SC_SERVERS/$2
-  ssh-copy-id $LOGIN@$SERVER
+  $SSH_COPY_ID $LOGIN@$SERVER
   exit 0
 fi
 
@@ -65,7 +71,7 @@ if [ "$1" == "-a" ] || [ "$1" == "-ak" ]; then
   if [ "$1" == "-ak" ]; then
     echo "Installing key"
     source $SC_SERVERS/$2
-    ssh-copy-id $LOGIN@$SERVER
+    $SSH_COPY_ID $LOGIN@$SERVER
   fi
 
   exit 0
