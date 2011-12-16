@@ -13,6 +13,7 @@ if [ "$1" == "--help" ] || [ "$1" == "-h" ]; then
   echo "    sc [name]        Logs into the named server"
   echo "    sc               Lists all the servers you can log into"
   echo "    sc -i [name]     Shows the login and IP details for the given server"
+  echo "    sc -h [name]     Shows the hostname of the given server"
   echo
   echo "Advanced usage"
   echo "    sc -k [name]                 Copies your public key over to the server for passwordless entry (requires ssh-copy-id)"
@@ -78,6 +79,17 @@ if [ "$1" == "-i" ]; then
 
   source $SC_SERVERS/$2
   printf "%s@%s" $LOGIN $SERVER
+  exit 0
+fi
+
+if [ "$1" == "-h" ]; then
+  if [ "$2" == "" ]; then
+    echo "Usage: sc -h [name]"
+    exit 1
+  fi
+
+  source $SC_SERVERS/$2
+  printf "%s" $SERVER
   exit 0
 fi
 
